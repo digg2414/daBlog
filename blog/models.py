@@ -4,6 +4,11 @@ from django.conf import settings
 
 
 # Create your models here.
+class PublishManager(models.Manager):
+    def qet_query_set(self):
+        return (
+            super().get_queryset().filter(status=Post.Status.PUBLISHED)
+        )
 
 class Post(models.Model):
     class Status(models.TextChoices):
@@ -26,6 +31,8 @@ class Post(models.Model):
         choices=Status,
         default=Status.DRAFT
     )
+    objects = models.Manager
+    published = PublishManager()
     
     class Meta:
         ordering = ['-publish']
